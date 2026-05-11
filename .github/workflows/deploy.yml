@@ -36,7 +36,7 @@ jobs:
         run: npm install
 
       - name: Compile contract
-        run: npx hardhat compile
+        run: npx hardhat run scripts/deploy.js --network sepolia
 
       - name: Deploy to Sepolia
         env:
