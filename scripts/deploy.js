@@ -3,7 +3,14 @@ const hre = require("hardhat");
 async function main() {
   console.log("Deploying OpaqueCredit...");
 
-  const OpaqueCredit = await hre.ethers.getContractFactory("OpaqueCredit");
+  const [deployer] = await hre.ethers.getSigners();
+
+  console.log("Deploying with account:", deployer.address);
+
+  const OpaqueCredit = await hre.ethers.getContractFactory(
+    "OpaqueCredit",
+    deployer
+  );
 
   const opaque = await OpaqueCredit.deploy();
 
