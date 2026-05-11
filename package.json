@@ -4,7 +4,7 @@
   "description": "Confidential credit scoring protocol built on Zama FHE",
   "scripts": {
     "compile": "hardhat compile",
-    "deploy": "hardhat run scripts/deploy.ts --network sepolia"
+    "deploy": "hardhat run scripts/deploy.js --network sepolia"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
@@ -13,6 +13,6 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@fhevm/solidity": "^0.7.0"
+    "@fhevm/solidity": "^0.9.0"
   }
 }
