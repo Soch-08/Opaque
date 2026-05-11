@@ -7,8 +7,8 @@ const {
   ETHERSCAN_API_KEY,
 } = process.env;
 
-function mustExist(value, name) {
-  if (!value) throw new Error(`Missing environment variable: ${name}`);
+function must(value, name) {
+  if (!value) throw new Error(`Missing env: ${name}`);
   return value;
 }
 
@@ -25,12 +25,14 @@ module.exports = {
 
   networks: {
     sepolia: {
-      url: `https://sepolia.infura.io/v3/${mustExist(INFURA_API_KEY, "INFURA_API_KEY")}`,
-      accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
+      url: `https://sepolia.infura.io/v3/${must(INFURA_API_KEY, "INFURA_API_KEY")}`,
+      accounts: PRIVATE_KEY
+        ? [PRIVATE_KEY.startsWith("0x") ? PRIVATE_KEY : `0x${PRIVATE_KEY}`]
+        : [],
     },
   },
 
   etherscan: {
-    apiKey: mustExist(ETHERSCAN_API_KEY, "ETHERSCAN_API_KEY"),
+    apiKey: must(ETHERSCAN_API_KEY, "ETHERSCAN_API_KEY"),
   },
 };
