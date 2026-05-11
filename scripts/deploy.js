@@ -1,41 +1,20 @@
-const { ethers, run } = require("hardhat");
+const hre = require("hardhat");
 
 async function main() {
   console.log("Deploying OpaqueCredit...");
 
-  const [deployer] = await ethers.getSigners();
-  console.log("Deployer:", deployer.address);
+  const OpaqueCredit = await hre.ethers.getContractFactory("OpaqueCredit");
 
-  const balance = await ethers.provider.getBalance(deployer.address);
-  console.log("Balance:", ethers.formatEther(balance), "ETH");
+  const opaque = await OpaqueCredit.deploy();
 
-  const OpaqueCredit = await ethers.getContractFactory("OpaqueCredit");
-  const contract = await OpaqueCredit.deploy();
+  await opaque.waitForDeployment();
 
-  await contract.waitForDeployment();
+  const address = await opaque.getAddress();
 
-  const address = await contract.getAddress();
-  const txHash = contract.deploymentTransaction()?.hash;
-
-  console.log("CONTRACT ADDRESS:", address);
-  console.log("TX HASH:", txHash);
-  console.log("Etherscan:", "https://sepolia.etherscan.io/address/" + address);
-
-  console.log("Waiting 30s for Etherscan verification...");
-  await new Promise((r) => setTimeout(r, 30000));
-
-  try {
-    await run("verify:verify", {
-      address: address,
-      constructorArguments: [],
-    });
-    console.log("Verified on Etherscan.");
-  } catch (e) {
-    console.log("Verification note:", e.message);
-  }
+  console.log("OpaqueCredit deployed to:", address);
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
 });
