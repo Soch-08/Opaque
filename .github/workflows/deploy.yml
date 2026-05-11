@@ -1,4 +1,4 @@
-name: Deploy OpaqueCredit to Sepolia
+name: Deploy Smart Contract (Sepolia)
 
 on:
   workflow_dispatch:
@@ -6,37 +6,44 @@ on:
       confirm:
         description: "Type DEPLOY to confirm"
         required: true
-        default: ""
 
 jobs:
   deploy:
-    name: Deploy Smart Contract
     runs-on: ubuntu-latest
 
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      NODE_ENV: production
 
     steps:
+      # 1. Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2. Setup Node
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: 20
           cache: npm
 
-      - name: Validate deploy confirmation
+      # 3. Safety gate (prevents accidental deploys)
+      - name: Confirm deployment
         run: |
           if [ "${{ github.event.inputs.confirm }}" != "DEPLOY" ]; then
-            echo "You must type DEPLOY in the confirmation field."
+            echo "❌ Deployment aborted. Type DEPLOY to proceed."
             exit 1
           fi
-          echo "Deploy confirmed."
+          echo "✅ Deployment confirmed."
 
+      # 4. Install dependencies (clean install)
       - name: Install dependencies
         run: npm ci
 
+      # 5. Compile contracts
+      - name: Compile contracts
+        run: npx hardhat compile
+
+      # 6. Deploy
       - name: Deploy to Sepolia
         env:
           PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
