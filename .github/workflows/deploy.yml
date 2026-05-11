@@ -21,11 +21,10 @@ jobs:
 
       # 2. Setup Node
       - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
+        - uses: actions/setup-node@v4
+  with:
+    node-version: "20"
+    cache: npm
       # 3. Safety gate (prevents accidental deploys)
       - name: Confirm deployment
         run: |
