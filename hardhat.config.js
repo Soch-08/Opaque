@@ -17,7 +17,7 @@ module.exports = {
   networks: {
     sepolia: {
       url: "https://sepolia.infura.io/v3/" + INFURA_API_KEY,
-      accounts: PRIVATE_KEY !== "" ? [PRIVATE_KEY] : [],
+      accounts: [process.env.PRIVATE_KEY]
       timeout: 120000,
     },
   },
